@@ -20,16 +20,19 @@ ey = []
 ex = []
 qntEnemy = w / 90
 linhasEnemy = 3
+deadBiro = []
 
 clock = pygame.time.Clock()
 
 countDownEnemy = 0
 downEnemy = 0
 
-for i in range(qntEnemy):
-    print(i)
-    enemy.append(pygame.image.load('./images/biroliro.jpg'))
-    ex.append((i * 98) + 10)
+for l in range(linhasEnemy):
+    for e in range(qntEnemy):
+        enemy.append(pygame.image.load('./images/biroliro.jpg'))
+        ex.append((e * 98) + 10)
+        ey.append((l * 77) + 10)
+        deadBiro.append(False)
 
 while not done:
     for event in pygame.event.get():
@@ -39,7 +42,6 @@ while not done:
             if event.key == pygame.K_SPACE:
                 raio.append(pygame.image.load('./images/raio.png'))
                 tirinho.append(True)
-                print(tirinho)
                 ry.append(ly)
                 rx.append(lx + 28)
 
@@ -60,6 +62,13 @@ while not done:
             lx += 10
             direction = ""
 
+    for l in range(linhasEnemy):
+        for e in range(len(enemy)):
+            enemyIn = e - 1
+            if deadBiro[enemyIn] == False:
+                screen.blit(enemy[enemyIn],
+                            (ex[enemyIn], (ey[enemyIn] + downEnemy)))
+
     if (len(raio) - 1) >= 0:
         for shoot in range(len(raio)):
             shootIn = shoot - 1
@@ -67,17 +76,20 @@ while not done:
             if len(tirinho) > 0:
                 if tirinho[shootIn] == True:
                     ry[shootIn] -= 10
+                    for l in range(linhasEnemy):
+                        for e in range(len(enemy)):
+                            enemyIn = e - 1
+                            if (ry[shootIn] - 70) <= ey[enemyIn] and (
+                                    rx[shootIn] >= ex[enemyIn]
+                                    and rx[shootIn] <= ex[enemyIn] + 90
+                            ) and deadBiro[enemyIn] == False:
+                                deadBiro[enemyIn] = True
+
                     if ry[shootIn] <= 0:
                         del raio[shootIn]
                         del tirinho[shootIn]
                         del rx[shootIn]
                         del ry[shootIn]
-
-    for l in range(linhasEnemy):
-        for e in range(len(enemy)):
-            enemyIn = e - 1
-            screen.blit(enemy[enemyIn],
-                        (ex[enemyIn], ((l * 77) + 10 + downEnemy)))
 
     countDownEnemy += 1
     if countDownEnemy == 60:
