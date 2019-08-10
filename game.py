@@ -79,17 +79,23 @@ while not done:
                     for l in range(linhasEnemy):
                         for e in range(len(enemy)):
                             enemyIn = e - 1
-                            if (ry[shootIn] - 70) <= ey[enemyIn] and (
+                            if (ry[shootIn] - 100) <= ey[enemyIn] and (
                                     rx[shootIn] >= ex[enemyIn]
                                     and rx[shootIn] <= ex[enemyIn] + 90
                             ) and deadBiro[enemyIn] == False:
                                 deadBiro[enemyIn] = True
-
-                    if ry[shootIn] <= 0:
-                        del raio[shootIn]
-                        del tirinho[shootIn]
-                        del rx[shootIn]
-                        del ry[shootIn]
+                                del raio[shootIn]
+                                del tirinho[shootIn]
+                                del rx[shootIn]
+                                del ry[shootIn]
+                                break
+                        break
+                    if shootIn >= 0:
+                        if ry[shootIn] <= 0:
+                            del raio[shootIn]
+                            del tirinho[shootIn]
+                            del rx[shootIn]
+                            del ry[shootIn]
 
     countDownEnemy += 1
     if countDownEnemy == 60:
@@ -100,3 +106,4 @@ while not done:
 
     clock.tick(60)
     pygame.display.update()
+    pygame.display.set_caption('Kill The Bozo')
