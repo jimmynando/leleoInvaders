@@ -1,36 +1,35 @@
 import pygame
 
 pygame.init()
-sx, sy = 400, 700
-screen = pygame.display.set_mode((sx, sy))
+w, h = 400, 700
+screen = pygame.display.set_mode((w, h))
 
 done = False
 direction = 0
 
-lx, ly = (sx * 0.5), (sy * 0.85)
+lx, ly = (w * 0.5), (h * 0.85)
 leleo = pygame.image.load('./images/leleo.jpg')
 
 raio = []
 ry = []
 rx = []
-shootC = 0
 tirinho = []
+
+enemy = []
+ey = []
+ex = []
+qntEnemy = w / 90
+linhasEnemy = 3
 
 clock = pygame.time.Clock()
 
-raio.append(pygame.image.load('./images/raio.png'))
-tirinho.append(True)
-shootC = len(raio) - 1
-ry.append(ly)
-rx.append(lx + 28)
+countDownEnemy = 0
+downEnemy = 0
 
-cx, cy = 0, 0
-cop = []
-copCounter = 0
-
-for i in range(10):
-    cop.append(pygame.image.load('./images/cop.png'))
-    copCounter = i
+for i in range(qntEnemy):
+    print(i)
+    enemy.append(pygame.image.load('./images/biroliro.jpg'))
+    ex.append((i * 98) + 10)
 
 while not done:
     for event in pygame.event.get():
@@ -40,7 +39,7 @@ while not done:
             if event.key == pygame.K_SPACE:
                 raio.append(pygame.image.load('./images/raio.png'))
                 tirinho.append(True)
-                shootC = len(raio) - 1
+                print(tirinho)
                 ry.append(ly)
                 rx.append(lx + 28)
 
@@ -56,33 +55,36 @@ while not done:
         if lx >= 10:
             lx -= 10
             direction = ""
-            rx[shootC] = lx + 28
     if direction == "RIGHT":
         if lx <= 320:
             lx += 10
             direction = ""
-            rx[shootC] = lx + 28
 
-    if len(raio) > 0:
-        print(len(raio), ry)
-        for shoot in range(shootC):
-            screen.blit(raio[shoot], (rx[shoot], ry[shoot]))
+    if (len(raio) - 1) >= 0:
+        for shoot in range(len(raio)):
+            shootIn = shoot - 1
+            screen.blit(raio[shootIn], (rx[shootIn], ry[shootIn]))
             if len(tirinho) > 0:
-                if tirinho[shoot] == True:
-                    ry[shoot] -= 10
-                    if ry[shoot] < 0:
-                        del raio[shoot]
-                        del tirinho[shoot]
-                        del rx[shoot]
-                        del ry[shoot]
-                        shootC -= 1
+                if tirinho[shootIn] == True:
+                    ry[shootIn] -= 10
+                    if ry[shootIn] <= 0:
+                        del raio[shootIn]
+                        del tirinho[shootIn]
+                        del rx[shootIn]
+                        del ry[shootIn]
+
+    for l in range(linhasEnemy):
+        for e in range(len(enemy)):
+            enemyIn = e - 1
+            screen.blit(enemy[enemyIn],
+                        (ex[enemyIn], ((l * 77) + 10 + downEnemy)))
+
+    countDownEnemy += 1
+    if countDownEnemy == 60:
+        countDownEnemy = 0
+        downEnemy += 5
 
     screen.blit(leleo, (lx, ly))
-    for i in range(copCounter):
-        if i < 5:
-            screen.blit(cop[i], (i * 85, 1))
-        else:
-            screen.blit(cop[i], ((i - 5) * 95, 90))
 
     clock.tick(60)
     pygame.display.update()
