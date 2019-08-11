@@ -1,4 +1,5 @@
 import pygame
+from model.Player import Player
 
 pygame.init()
 w, h = 400, 700
@@ -7,8 +8,7 @@ screen = pygame.display.set_mode((w, h))
 done = False
 direction = 0
 
-lx, ly = (w * 0.5), (h * 0.85)
-leleo = pygame.image.load('./images/leleo.jpg')
+player = Player(pygame.image.load('./images/leleo.jpg'), (w * 0.5), (h * 0.85))
 
 raio = []
 ry = []
@@ -42,25 +42,13 @@ while not done:
             if event.key == pygame.K_SPACE:
                 raio.append(pygame.image.load('./images/raio.png'))
                 tirinho.append(True)
-                ry.append(ly)
-                rx.append(lx + 28)
+                ry.append(player.y)
+                rx.append(player.x + 28)
 
     pressed = pygame.key.get_pressed()
     screen.fill((255, 255, 255))
 
-    if pressed[pygame.K_LEFT]:
-        direction = "LEFT"
-    if pressed[pygame.K_RIGHT]:
-        direction = "RIGHT"
-
-    if direction == "LEFT":
-        if lx >= 10:
-            lx -= 10
-            direction = ""
-    if direction == "RIGHT":
-        if lx <= 320:
-            lx += 10
-            direction = ""
+    player.move(pressed)
 
     for l in range(linhasEnemy):
         for e in range(len(enemy)):
@@ -102,8 +90,8 @@ while not done:
         countDownEnemy = 0
         downEnemy += 5
 
-    screen.blit(leleo, (lx, ly))
+    screen.blit(player.sprite, (player.x, player.y))
 
     clock.tick(60)
     pygame.display.update()
-    pygame.display.set_caption('Kill The Bozo')
+    pygame.display.set_caption('Killing Bozo')
